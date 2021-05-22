@@ -1,7 +1,7 @@
 
-##Book widget test task
+## Book widget test task
 
-####Get started:
+#### Get started:
 Run following commands in project directory:
 - `npm install`
 - `npm start`
