@@ -1,0 +1,22 @@
+
+.filter-bar{
+
+    display: flex;
+    align-items: center;
+
+    padding-left: 20px;
+
+    height: 100px;
+
+    border-bottom: 1px solid #999;
+}
+
+.filter-bar__button{
+    background: none;
+    border: none;
+
+    font-size: inherit;
+
+    text-decoration: underline;
+    cursor: pointer;
+}

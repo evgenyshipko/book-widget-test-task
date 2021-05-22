@@ -1,0 +1,27 @@
+
+.navigator{
+    display: flex;
+    flex-direction: row;
+    height: 50px;
+}
+
+.navigator__item{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    cursor: pointer;
+
+    width: 33.33%;
+    border-bottom: 1px solid #999;
+}
+
+.navigator__item_active{
+    border-bottom: none;
+    font-weight: bold;
+}
+
+#in_progress{
+    border-left: 1px solid #999;
+    border-right: 1px solid #999;
+}

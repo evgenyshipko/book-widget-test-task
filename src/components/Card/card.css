@@ -1,0 +1,39 @@
+
+.card{
+    border-bottom: 1px solid #999;
+    padding: 20px;
+}
+
+.card__title{
+    font-size: 20px;
+    display: inline-block;
+    font-weight: bold;
+    max-width: calc(100% - 150px);
+}
+
+.card__button{
+
+    font-size: inherit;
+
+    display: inline-block;
+    float: right;
+
+    background: none;
+    border: none;
+    cursor: pointer;
+
+    font-weight: bold;
+    text-decoration: underline;
+}
+
+.button_icon{
+    position: absolute;
+}
+
+.card__description{
+    margin: 10px 0;
+}
+
+.card__tags{
+    margin-bottom: 10px
+}
