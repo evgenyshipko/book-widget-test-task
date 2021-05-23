@@ -5,10 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "cross-env NODE_ENV=development webpack serve --config webpack/webpack.dev.js",
-    "start:typegen": "kea-typegen watch",
-    "build": "cross-env NODE_ENV=production webpack --config webpack/webpack.prod.js",
-    "lint:eslint": "eslint src/ --ext .ts,.tsx",
-    "prettier": "prettier --write src/"
+    "build": "cross-env NODE_ENV=production webpack --config webpack/webpack.prod.js"
   },
   "author": "evgenyshipko",
   "license": "ISC",
