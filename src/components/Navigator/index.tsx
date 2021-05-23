@@ -1,25 +1,26 @@
 import React, { FC, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-import './navigator.css';
 import { setStatus } from '@src/store/actions';
 import { STATUS } from '@src/const';
-import { globalState, history } from '@src/store/store';
-import { QuantityType } from '@src/types/types';
+import { history } from '@src/store/store';
+import { GlobalStorageType, StatusBuffer } from '@src/types/types';
+
+import './navigator.css';
 
 export const Navigator: FC = () => {
     const dispatch = useDispatch();
 
-    const status = useSelector<typeof globalState, STATUS>(
-        (state) => state.status
+    const currentStatus = useSelector<GlobalStorageType, STATUS>(
+        (state) => state.currentStatus
     );
 
-    const search = useSelector<typeof globalState, string>(
+    const search = useSelector<GlobalStorageType, string>(
         (state) => state.router.location.search
     );
 
-    const quantity = useSelector<typeof globalState, QuantityType>(
-        (state) => state.quantity
+    const statusBuffer = useSelector<GlobalStorageType, StatusBuffer>(
+        (state) => state.statusBuffer
     );
 
     const setTabByUrlParam = () => {
@@ -28,7 +29,7 @@ export const Navigator: FC = () => {
         const urlStatus = currentUrlParams.get('tab')?.toUpperCase();
 
         if (
-            status !== urlStatus &&
+            currentStatus !== urlStatus &&
             urlStatus &&
             Object.keys(STATUS).includes(urlStatus)
         ) {
@@ -53,34 +54,34 @@ export const Navigator: FC = () => {
         <div className="navigator">
             <div
                 className={
-                    status === STATUS.TO_READ
+                    currentStatus === STATUS.TO_READ
                         ? 'navigator__item navigator__item_active'
                         : 'navigator__item'
                 }
                 onClick={() => setCurrentStatus(STATUS.TO_READ)}
             >
-                To read ({quantity.TO_READ})
+                To read ({statusBuffer.TO_READ.length})
             </div>
             <div
                 id="in_progress"
                 className={
-                    status === STATUS.IN_PROGRESS
+                    currentStatus === STATUS.IN_PROGRESS
                         ? 'navigator__item navigator__item_active'
                         : 'navigator__item'
                 }
                 onClick={() => setCurrentStatus(STATUS.IN_PROGRESS)}
             >
-                In progress ({quantity.IN_PROGRESS})
+                In progress ({statusBuffer.IN_PROGRESS.length})
             </div>
             <div
                 className={
-                    status === STATUS.DONE
+                    currentStatus === STATUS.DONE
                         ? 'navigator__item navigator__item_active'
                         : 'navigator__item'
                 }
                 onClick={() => setCurrentStatus(STATUS.DONE)}
             >
-                Done ({quantity.DONE})
+                Done ({statusBuffer.DONE.length})
             </div>
         </div>
     );

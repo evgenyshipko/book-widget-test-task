@@ -1,4 +1,4 @@
-import { STATUS } from '@src/const';
+import { globalState } from '@src/store/store';
 
 export type BookData = {
     id: string;
@@ -6,11 +6,12 @@ export type BookData = {
     title: string;
     description: string;
     tags: string[];
-    status: STATUS;
 };
 
-export type QuantityType = {
-    TO_READ: number;
-    IN_PROGRESS: number;
-    DONE: number;
+export type StatusBuffer = {
+    TO_READ: string[];
+    IN_PROGRESS: string[];
+    DONE: string[];
 };
+
+export type GlobalStorageType = typeof globalState;

@@ -1,10 +1,11 @@
-import { BookData } from '@src/types/types';
 import React, { FC } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+
+import { BookData, GlobalStorageType } from '@src/types/types';
 import { STATUS } from '@src/const';
 import { changeBookStatus } from '@src/store/actions';
 
-import arrow from 'src/assets/icons/arrow_forward_24px_outlined.svg';
+import rightArrow from 'src/assets/icons/arrow_forward_24px_outlined.svg';
 import backArrow from 'src/assets/icons/subdirectory_arrow_left_24px_outlined.svg';
 
 type ButtonProps = {
@@ -34,14 +35,15 @@ const getTargetStatus = (currentStatus: STATUS) => {
 };
 
 export const Button: FC<ButtonProps> = ({ bookData }) => {
-    const currentStatus = bookData.status;
-
     const dispatch = useDispatch();
+
+    const currentStatus = useSelector<GlobalStorageType, STATUS>(
+        (state) => state.currentStatus
+    );
 
     const handleOnClick = () => {
         const targetStatus = getTargetStatus(currentStatus);
-        bookData.status = targetStatus;
-        dispatch(changeBookStatus(currentStatus, targetStatus));
+        dispatch(changeBookStatus(currentStatus, targetStatus, bookData.id));
     };
 
     return (
@@ -49,7 +51,7 @@ export const Button: FC<ButtonProps> = ({ bookData }) => {
             {getTitle(currentStatus)}
             <img
                 className="button_icon"
-                src={currentStatus === STATUS.DONE ? backArrow : arrow}
+                src={currentStatus === STATUS.DONE ? backArrow : rightArrow}
                 alt={''}
             />
         </button>

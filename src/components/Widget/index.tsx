@@ -1,19 +1,21 @@
 import React, { FC, useEffect } from 'react';
-import './widget.css';
-import { Navigator } from '@components/Navigator';
 import { useDispatch, useSelector } from 'react-redux';
+
+import { Navigator } from '@components/Navigator';
 import { getBookData } from '@components/Widget/services';
-import { fillStore, setInitialBookQuantity } from '@src/store/actions';
+import { fillStore, setStatusBuffer } from '@src/store/actions';
 import { STATUS } from '@src/const';
-import { globalState, history } from '@src/store/store';
+import { history } from '@src/store/store';
 import { ContentBlock } from '@components/ContentBlock';
 import { FilterBar } from '@components/FilterBar';
-import { BookData } from '@src/types/types';
+import { BookData, GlobalStorageType, StatusBuffer } from '@src/types/types';
+
+import './widget.css';
 
 export const Widget: FC = () => {
     const dispatch = useDispatch();
 
-    const bookData = useSelector<typeof globalState, BookData[]>(
+    const bookData = useSelector<GlobalStorageType, BookData[]>(
         (state) => state.bookData
     );
 
@@ -26,39 +28,19 @@ export const Widget: FC = () => {
 
     useEffect(() => {
         getBookData().then((bookData) => {
-            if (localStorage.getItem('bookData')) {
-                const localStorageBookData: BookData[] = JSON.parse(
-                    localStorage.getItem('bookData')!
+            let statusBuffer: StatusBuffer;
+            if (localStorage.getItem('statusBuffer')) {
+                statusBuffer = JSON.parse(
+                    localStorage.getItem('statusBuffer')!
                 );
-                bookData.forEach((data) => {
-                    const localStorageItem = localStorageBookData.find(
-                        (item) => item.id === data.id
-                    );
-                    if (localStorageItem) {
-                        data.status = localStorageItem.status;
-                    }
-                });
             } else {
-                bookData.forEach(
-                    (item, index) => (bookData[index].status = STATUS.TO_READ)
-                );
+                statusBuffer = {
+                    [STATUS.TO_READ]: bookData.map((data) => data.id),
+                    [STATUS.DONE]: [],
+                    [STATUS.IN_PROGRESS]: [],
+                };
             }
-
-            const quantity = bookData.reduce(
-                (quantity, data) => {
-                    if (data.status) {
-                        quantity[data.status]++;
-                    }
-                    return quantity;
-                },
-                {
-                    TO_READ: 0,
-                    DONE: 0,
-                    IN_PROGRESS: 0,
-                }
-            );
-
-            dispatch(setInitialBookQuantity(quantity));
+            dispatch(setStatusBuffer(statusBuffer));
             dispatch(fillStore(bookData));
         });
     }, []);

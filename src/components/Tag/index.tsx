@@ -1,9 +1,10 @@
 import React, { FC, useCallback } from 'react';
 import { useDispatch } from 'react-redux';
+
 import { addTagToFilter } from '@src/store/actions';
+import { history } from '@src/store/store';
 
 import './tag.css';
-import { history } from '@src/store/store';
 
 type TagProps = {
     content: string;

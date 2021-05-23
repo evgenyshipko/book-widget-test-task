@@ -1,13 +1,13 @@
-import { applyMiddleware, createStore, combineReducers, compose } from 'redux';
+import { applyMiddleware, combineReducers, compose, createStore } from 'redux';
 import logger from 'redux-logger';
 import { connectRouter, routerMiddleware } from 'connected-react-router';
 import { createBrowserHistory } from 'history';
 
 import {
     bookDataReducer,
-    filterTagReducer,
-    quantityReducer,
     currentStatusReducer,
+    filterTagReducer,
+    statusBufferReducer,
 } from './reducers';
 
 export const history = createBrowserHistory();
@@ -16,8 +16,8 @@ const createRootReducer = (history: any) =>
     combineReducers({
         router: connectRouter(history),
         bookData: bookDataReducer,
-        status: currentStatusReducer,
-        quantity: quantityReducer,
+        currentStatus: currentStatusReducer,
+        statusBuffer: statusBufferReducer,
         filterTags: filterTagReducer,
     });
 

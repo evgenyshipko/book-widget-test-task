@@ -2,9 +2,9 @@ import React, { FC, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { v4 as uuidv4 } from 'uuid';
 
-import { globalState, history } from '@src/store/store';
+import { history } from '@src/store/store';
 import { Tag } from '@components/Tag';
-
+import { GlobalStorageType } from '@src/types/types';
 import { addTagToFilter, clearFilter } from '@src/store/actions';
 
 import './filter_bar.css';
@@ -12,11 +12,11 @@ import './filter_bar.css';
 export const FilterBar: FC = () => {
     const dispatch = useDispatch();
 
-    const filterTags = useSelector<typeof globalState, string[]>(
+    const filterTags = useSelector<GlobalStorageType, string[]>(
         (state) => state.filterTags
     );
 
-    const search = useSelector<typeof globalState, string>(
+    const search = useSelector<GlobalStorageType, string>(
         (state) => state.router.location.search
     );
 

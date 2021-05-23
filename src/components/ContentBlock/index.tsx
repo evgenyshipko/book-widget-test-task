@@ -1,28 +1,32 @@
 import React, { FC } from 'react';
-import { BookData } from '@src/types/types';
-import { STATUS } from '@src/const';
-import { Card } from '@components/Card';
+import { useSelector } from 'react-redux';
 import { v4 as uuidv4 } from 'uuid';
 
+import { BookData, GlobalStorageType, StatusBuffer } from '@src/types/types';
+import { STATUS } from '@src/const';
+import { Card } from '@components/Card';
+
 import './content_block.css';
-import { useSelector } from 'react-redux';
-import { globalState } from '@src/store/store';
 
 type ContentBlockProps = {
     bookData: BookData[];
 };
 
 export const ContentBlock: FC<ContentBlockProps> = ({ bookData }) => {
-    const filterTags = useSelector<typeof globalState, string[]>(
+    const filterTags = useSelector<GlobalStorageType, string[]>(
         (state) => state.filterTags
     );
 
-    const status = useSelector<typeof globalState, STATUS>(
-        (state) => state.status
+    const currentsStatus = useSelector<GlobalStorageType, STATUS>(
+        (state) => state.currentStatus
+    );
+
+    const statusBuffer = useSelector<GlobalStorageType, StatusBuffer>(
+        (state) => state.statusBuffer
     );
 
     const filteredData = bookData.filter((bookData) => {
-        let result = bookData.status === status;
+        let result = statusBuffer[currentsStatus].includes(bookData.id);
         filterTags.forEach((tag) => {
             result = result && bookData.tags.includes(tag);
         });

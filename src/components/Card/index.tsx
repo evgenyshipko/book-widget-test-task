@@ -1,9 +1,11 @@
-import { BookData } from '@src/types/types';
 import React, { FC } from 'react';
-import './card.css';
+import { v4 as uuidv4 } from 'uuid';
+
+import { BookData } from '@src/types/types';
 import { Button } from '@components/Card/Button';
 import { Tag } from '@components/Tag';
-import { v4 as uuidv4 } from 'uuid';
+
+import './card.css';
 
 type CardProps = {
     bookData: BookData;

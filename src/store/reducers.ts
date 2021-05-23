@@ -1,4 +1,4 @@
-import { BookData, QuantityType } from '@src/types/types';
+import { BookData, StatusBuffer } from '@src/types/types';
 import { ACTIONS } from '@src/store/actions';
 import { STATUS } from '@src/const';
 
@@ -10,9 +10,6 @@ export function bookDataReducer(
     switch (type) {
         case ACTIONS.FILL_STATE:
             return payload;
-        case ACTIONS.CHANGE_BOOK_STATUS:
-            localStorage.setItem('bookData', JSON.stringify(state));
-            return [...state];
         default:
             return state;
     }
@@ -23,7 +20,6 @@ export function currentStatusReducer(
     action: { type: string; payload: STATUS }
 ): STATUS {
     const { type, payload } = action;
-
     switch (type) {
         case ACTIONS.SET_STATUS:
             return payload;
@@ -32,27 +28,32 @@ export function currentStatusReducer(
     }
 }
 
-export function quantityReducer(
-    state: QuantityType = { TO_READ: 0, IN_PROGRESS: 0, DONE: 0 },
+export function statusBufferReducer(
+    state: StatusBuffer = { TO_READ: [], IN_PROGRESS: [], DONE: [] },
     action: {
         type: string;
-        payload: { initial: STATUS; target: STATUS } | QuantityType;
+        payload: { initial: STATUS; target: STATUS; id: string } | StatusBuffer;
     }
-): QuantityType {
+): StatusBuffer {
     const { type, payload } = action;
-    switch (type) {
-        case ACTIONS.SET_INITIAL_BOOK_QUANTITY:
-            return payload as QuantityType;
-        case ACTIONS.CHANGE_BOOK_STATUS:
-            const payload1 = payload as { initial: STATUS; target: STATUS };
-            return {
-                ...state,
-                [payload1.initial]: state[payload1.initial] - 1,
-                [payload1.target]: state[payload1.target] + 1,
-            };
-        default:
-            return state;
+    if (type === ACTIONS.SET_STATUS_BUFFER) {
+        localStorage.setItem('statusBuffer', JSON.stringify(payload));
+        return payload as StatusBuffer;
+    } else if (type === ACTIONS.CHANGE_BOOK_STATUS) {
+        const statusInfo = payload as {
+            initial: STATUS;
+            target: STATUS;
+            id: string;
+        };
+        state[statusInfo.initial] = state[statusInfo.initial].filter(
+            (data) => data !== statusInfo.id
+        );
+        state[statusInfo.target].push(statusInfo.id);
+        const statusBuffer = { ...state };
+        localStorage.setItem('statusBuffer', JSON.stringify(statusBuffer));
+        return statusBuffer;
     }
+    return state;
 }
 
 export function filterTagReducer(
