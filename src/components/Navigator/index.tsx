@@ -1,4 +1,4 @@
-import React, { FC, useEffect } from 'react';
+import React, { FC, useCallback, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { setStatus } from '@src/store/actions';
@@ -7,6 +7,14 @@ import { history } from '@src/store/store';
 import { GlobalStorageType, StatusBuffer } from '@src/types/types';
 
 import './navigator.css';
+import { Dispatch } from 'redux';
+
+const setCurrentStatus = (dispatch: Dispatch, status: STATUS) => {
+    const currentUrlParams = new URLSearchParams(window.location.search);
+    currentUrlParams.set('tab', status.toLowerCase());
+    history.push(window.location.pathname + '?' + currentUrlParams.toString());
+    dispatch(setStatus(status));
+};
 
 export const Navigator: FC = () => {
     const dispatch = useDispatch();
@@ -23,7 +31,7 @@ export const Navigator: FC = () => {
         (state) => state.statusBuffer
     );
 
-    const setTabByUrlParam = () => {
+    const setTabByUrlParam = useCallback(() => {
         const currentUrlParams = new URLSearchParams(search);
 
         const urlStatus = currentUrlParams.get('tab')?.toUpperCase();
@@ -35,20 +43,26 @@ export const Navigator: FC = () => {
         ) {
             dispatch(setStatus(urlStatus as STATUS));
         }
-    };
+    }, [search, currentStatus]);
 
     useEffect(() => {
         setTabByUrlParam();
     }, [search]);
 
-    const setCurrentStatus = (status: STATUS) => {
-        const currentUrlParams = new URLSearchParams(window.location.search);
-        currentUrlParams.set('tab', status.toLowerCase());
-        history.push(
-            window.location.pathname + '?' + currentUrlParams.toString()
-        );
-        dispatch(setStatus(status));
-    };
+    const handleOnClickToRead = useCallback(
+        () => setCurrentStatus(dispatch, STATUS.TO_READ),
+        [dispatch]
+    );
+
+    const handleOnClickInProgress = useCallback(
+        () => setCurrentStatus(dispatch, STATUS.IN_PROGRESS),
+        [dispatch]
+    );
+
+    const handleOnClickToDone = useCallback(
+        () => setCurrentStatus(dispatch, STATUS.DONE),
+        [dispatch]
+    );
 
     return (
         <div className="navigator">
@@ -58,7 +72,7 @@ export const Navigator: FC = () => {
                         ? 'navigator__item navigator__item_active'
                         : 'navigator__item'
                 }
-                onClick={() => setCurrentStatus(STATUS.TO_READ)}
+                onClick={handleOnClickToRead}
             >
                 To read ({statusBuffer.TO_READ.length})
             </div>
@@ -69,7 +83,7 @@ export const Navigator: FC = () => {
                         ? 'navigator__item navigator__item_active'
                         : 'navigator__item'
                 }
-                onClick={() => setCurrentStatus(STATUS.IN_PROGRESS)}
+                onClick={handleOnClickInProgress}
             >
                 In progress ({statusBuffer.IN_PROGRESS.length})
             </div>
@@ -79,7 +93,7 @@ export const Navigator: FC = () => {
                         ? 'navigator__item navigator__item_active'
                         : 'navigator__item'
                 }
-                onClick={() => setCurrentStatus(STATUS.DONE)}
+                onClick={handleOnClickToDone}
             >
                 Done ({statusBuffer.DONE.length})
             </div>

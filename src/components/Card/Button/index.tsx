@@ -1,7 +1,7 @@
-import React, { FC } from 'react';
+import React, { FC, useCallback, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { BookData, GlobalStorageType } from '@src/types/types';
+import { BookData, GlobalStorageType, StatusBuffer } from '@src/types/types';
 import { STATUS } from '@src/const';
 import { changeBookStatus } from '@src/store/actions';
 
@@ -41,19 +41,36 @@ export const Button: FC<ButtonProps> = ({ bookData }) => {
         (state) => state.currentStatus
     );
 
-    const handleOnClick = () => {
-        const targetStatus = getTargetStatus(currentStatus);
-        dispatch(changeBookStatus(currentStatus, targetStatus, bookData.id));
-    };
+    const currentStatusBuffer = useSelector<GlobalStorageType, StatusBuffer>(
+        (state) => state.statusBuffer
+    );
+
+    const targetStatus = useMemo(() => getTargetStatus(currentStatus), [
+        currentStatus,
+    ]);
+
+    const handleOnClick = useCallback(() => {
+        dispatch(
+            changeBookStatus(
+                currentStatusBuffer,
+                currentStatus,
+                targetStatus,
+                bookData.id
+            )
+        );
+    }, [currentStatus, currentStatusBuffer, targetStatus, bookData]);
+
+    const title = useMemo(() => getTitle(currentStatus), [currentStatus]);
+
+    const icon = useMemo(
+        () => (currentStatus === STATUS.DONE ? backArrow : rightArrow),
+        [currentStatus]
+    );
 
     return (
         <button className="card__button" onClick={handleOnClick}>
-            {getTitle(currentStatus)}
-            <img
-                className="button_icon"
-                src={currentStatus === STATUS.DONE ? backArrow : rightArrow}
-                alt={''}
-            />
+            {title}
+            <img className="button_icon" src={icon} alt={''} />
         </button>
     );
 };

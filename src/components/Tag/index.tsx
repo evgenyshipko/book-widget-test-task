@@ -1,4 +1,4 @@
-import React, { FC, useCallback } from 'react';
+import React, { FC, memo, useCallback } from 'react';
 import { useDispatch } from 'react-redux';
 
 import { addTagToFilter } from '@src/store/actions';
@@ -11,7 +11,7 @@ type TagProps = {
     isClickable: boolean;
 };
 
-export const Tag: FC<TagProps> = ({ content, isClickable }) => {
+export const Tag: FC<TagProps> = memo(({ content, isClickable }) => {
     const dispatch = useDispatch();
 
     const handleOnClick = useCallback(() => {
@@ -35,4 +35,4 @@ export const Tag: FC<TagProps> = ({ content, isClickable }) => {
             #{content}
         </span>
     );
-};
+});

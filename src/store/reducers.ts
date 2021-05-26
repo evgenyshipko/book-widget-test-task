@@ -32,26 +32,12 @@ export function statusBufferReducer(
     state: StatusBuffer = { TO_READ: [], IN_PROGRESS: [], DONE: [] },
     action: {
         type: string;
-        payload: { initial: STATUS; target: STATUS; id: string } | StatusBuffer;
+        payload: StatusBuffer;
     }
 ): StatusBuffer {
     const { type, payload } = action;
     if (type === ACTIONS.SET_STATUS_BUFFER) {
-        localStorage.setItem('statusBuffer', JSON.stringify(payload));
-        return payload as StatusBuffer;
-    } else if (type === ACTIONS.CHANGE_BOOK_STATUS) {
-        const statusInfo = payload as {
-            initial: STATUS;
-            target: STATUS;
-            id: string;
-        };
-        state[statusInfo.initial] = state[statusInfo.initial].filter(
-            (data) => data !== statusInfo.id
-        );
-        state[statusInfo.target].push(statusInfo.id);
-        const statusBuffer = { ...state };
-        localStorage.setItem('statusBuffer', JSON.stringify(statusBuffer));
-        return statusBuffer;
+        return payload;
     }
     return state;
 }

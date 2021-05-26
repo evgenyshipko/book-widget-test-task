@@ -1,6 +1,5 @@
-import React, { FC } from 'react';
+import React, { FC, useMemo } from 'react';
 import { useSelector } from 'react-redux';
-import { v4 as uuidv4 } from 'uuid';
 
 import { BookData, GlobalStorageType, StatusBuffer } from '@src/types/types';
 import { STATUS } from '@src/const';
@@ -17,7 +16,7 @@ export const ContentBlock: FC<ContentBlockProps> = ({ bookData }) => {
         (state) => state.filterTags
     );
 
-    const currentsStatus = useSelector<GlobalStorageType, STATUS>(
+    const currentStatus = useSelector<GlobalStorageType, STATUS>(
         (state) => state.currentStatus
     );
 
@@ -25,13 +24,17 @@ export const ContentBlock: FC<ContentBlockProps> = ({ bookData }) => {
         (state) => state.statusBuffer
     );
 
-    const filteredData = bookData.filter((bookData) => {
-        let result = statusBuffer[currentsStatus].includes(bookData.id);
-        filterTags.forEach((tag) => {
-            result = result && bookData.tags.includes(tag);
-        });
-        return result;
-    });
+    const filteredData = useMemo(
+        () =>
+            bookData.filter((bookData) => {
+                let result = statusBuffer[currentStatus].includes(bookData.id);
+                filterTags.forEach((tag) => {
+                    result = result && bookData.tags.includes(tag);
+                });
+                return result;
+            }),
+        [bookData, currentStatus, filterTags, statusBuffer]
+    );
 
     if (filteredData.length === 0) {
         return <div className="content-block_empty">List is empty</div>;
@@ -39,7 +42,10 @@ export const ContentBlock: FC<ContentBlockProps> = ({ bookData }) => {
     return (
         <>
             {filteredData.map((bookData) => (
-                <Card key={uuidv4()} bookData={bookData} />
+                <Card
+                    key={`${bookData.id}-${bookData.title}`}
+                    bookData={bookData}
+                />
             ))}
         </>
     );

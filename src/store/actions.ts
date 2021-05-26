@@ -5,7 +5,6 @@ export enum ACTIONS {
     FILL_STATE = 'FILL_STATE',
     SET_STATUS = 'SET_STATUS',
     SET_STATUS_BUFFER = 'SET_STATUS_BUFFER',
-    CHANGE_BOOK_STATUS = 'CHANGE_BOOK_STATUS',
     ADD_TAG_TO_FILTER = 'ADD_TAG_TO_SEARCH',
     CLEAR_FILTER = 'CLEAR_FILTER',
 }
@@ -20,19 +19,40 @@ export const setStatus = (status: STATUS) => ({
     payload: status,
 });
 
-export const setStatusBuffer = (quantity: StatusBuffer) => ({
-    type: ACTIONS.SET_STATUS_BUFFER,
-    payload: quantity,
-});
+export const setStatusBuffer = (statusBufferInfo: StatusBuffer) => {
+    localStorage.setItem('statusBuffer', JSON.stringify(statusBufferInfo));
+    return {
+        type: ACTIONS.SET_STATUS_BUFFER,
+        payload: statusBufferInfo,
+    };
+};
 
 export const changeBookStatus = (
+    currentStatusBuffer: StatusBuffer,
     initial: STATUS,
     target: STATUS,
     id: string
-) => ({
-    type: ACTIONS.CHANGE_BOOK_STATUS,
-    payload: { initial, target, id },
-});
+) => {
+    const initialBooks = currentStatusBuffer[initial].filter(
+        (data) => data !== id
+    );
+
+    const targetBooks = currentStatusBuffer[target];
+    targetBooks.push(id);
+
+    const statusBufferInfo = {
+        ...currentStatusBuffer,
+        [initial]: initialBooks,
+        [target]: targetBooks,
+    };
+
+    localStorage.setItem('statusBuffer', JSON.stringify(statusBufferInfo));
+
+    return {
+        type: ACTIONS.SET_STATUS_BUFFER,
+        payload: statusBufferInfo,
+    };
+};
 
 export const clearFilter = () => ({
     type: ACTIONS.CLEAR_FILTER,

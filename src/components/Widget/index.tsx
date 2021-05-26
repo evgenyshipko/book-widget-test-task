@@ -5,7 +5,6 @@ import { Navigator } from '@components/Navigator';
 import { getBookData } from '@components/Widget/services';
 import { fillStore, setStatusBuffer } from '@src/store/actions';
 import { STATUS } from '@src/const';
-import { history } from '@src/store/store';
 import { ContentBlock } from '@components/ContentBlock';
 import { FilterBar } from '@components/FilterBar';
 import { BookData, GlobalStorageType, StatusBuffer } from '@src/types/types';
@@ -18,13 +17,6 @@ export const Widget: FC = () => {
     const bookData = useSelector<GlobalStorageType, BookData[]>(
         (state) => state.bookData
     );
-
-    useEffect(() => {
-        const currentUrlParams = new URLSearchParams(window.location.search);
-        if (!currentUrlParams.get('tab')) {
-            history.push(window.location.pathname + '?tab=done&tags=js');
-        }
-    });
 
     useEffect(() => {
         getBookData().then((bookData) => {

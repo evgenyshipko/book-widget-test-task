@@ -1,5 +1,4 @@
-import React, { FC } from 'react';
-import { v4 as uuidv4 } from 'uuid';
+import React, { FC, memo } from 'react';
 
 import { BookData } from '@src/types/types';
 import { Button } from '@components/Card/Button';
@@ -11,7 +10,7 @@ type CardProps = {
     bookData: BookData;
 };
 
-export const Card: FC<CardProps> = ({ bookData }) => {
+export const Card: FC<CardProps> = memo(({ bookData }) => {
     return (
         <div className="card">
             <div className="card__author">{bookData.author}</div>
@@ -20,9 +19,9 @@ export const Card: FC<CardProps> = ({ bookData }) => {
             <div className="card__description">{bookData.description}</div>
             <div className="card__tags">
                 {bookData.tags.map((tag) => (
-                    <Tag content={tag} key={uuidv4()} isClickable={true} />
+                    <Tag content={tag} key={`${tag}-key`} isClickable={true} />
                 ))}
             </div>
         </div>
     );
-};
+});

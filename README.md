@@ -1,5 +1,6 @@
 
 ## Book widget test task
+https://github.com/lastw/test-task
 
 #### Get started:
 Run following commands in project directory:
