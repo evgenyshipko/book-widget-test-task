@@ -12,3 +12,4 @@ Application will be available on http://localhost:4000/
 - React + Typescript
 - Redux
 - pure css
+- webpack
