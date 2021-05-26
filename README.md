@@ -1,6 +1,5 @@
 
 ## Book widget test task
-https://github.com/lastw/test-task
 
 #### Get started:
 Run following commands in project directory:
@@ -8,3 +7,8 @@ Run following commands in project directory:
 - `npm start`
 
 Application will be available on http://localhost:4000/
+
+#### Stack:
+- React + Typescript
+- Redux
+- pure css
